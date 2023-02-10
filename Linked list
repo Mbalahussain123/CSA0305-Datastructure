@@ -1,0 +1,429 @@
+#include <stdio.h>
+#include <conio.h>
+
+typedef struct node{
+int info;
+struct node *link;
+}node;
+ 
+node* create(node *start)//for creating a list
+{
+ node *temp,*t;
+ int n,i;
+ printf("enter no of nodes you want to insert:");
+ scanf("%d",&n);
+ for(i=0;i<n;i++)
+ {
+  temp=(node*) malloc(sizeof(node));
+  printf("enter data for node %d:",i+1);
+  scanf("%d",&temp->info);
+  temp->link=null;
+  if(start==null) 
+   start=temp;
+  else
+  {
+   t=start;
+   while(t->link!=null)
+    t=t->link;
+   t->link=temp;
+  }
+ }
+ return start;
+}
+
+void disp(node *start)//for printing a list
+{
+ node *t;
+ printf("\nelements of the list:");
+ for(t=start;t!=null;t=t->link)
+ {
+  if(t->link!=null)
+   printf("%d->",t->info);
+  else
+   printf("%d",t->info);
+ }
+ printf("\n");
+}
+
+node* append(node *start)//append element at end
+{
+ node *t,*temp;
+ temp=(node*) malloc(sizeof(node));
+ printf("enter data to be appended:");
+ scanf("%d",&temp->info);
+ for(t=start;t->link!=null;t=t->link);
+ t->link=temp;
+ temp->link=null;
+ return start;
+}
+
+node* concat(node *s1,node *s2)//concatenate 2 lists
+{
+ node *t;
+ t=s1;
+ while(t->link!=null)
+  t=t->link;
+ t->link=s2;
+ return s1;
+}
+ 
+node* fr(node *start)//free all nodes in a list
+{
+ node *t;
+ t=start;
+ while(t!=null)
+ {
+  t=start;
+  start=t->link;
+  free(t);
+ }
+ return start;
+} 
+
+node* rev(node *start)//to reverse a list
+{ 
+ node *t1,*t2,*s;
+ for(t1=start;t1->link!=null;t1=t1->link);
+ s=t1;
+ while(t1!=start)
+ { 
+  for(t2=start;t2->link!=t1;t2=t2->link);
+  t1->link=t2;
+  t1=t2;
+ }
+ t1->link=null;
+ return s;
+}
+
+node* dellast(node *start)//delete last element
+{
+ node *t,*t2;
+ for(t=start;t->link->link!=null;t=t->link);
+ t2=t->link;
+ free(t2);
+ t->link=null;
+ return start;
+}
+
+node* deln(node *start)//delete nth element
+{
+ int i=1,n;
+ node *t,*t2;
+ printf("\nenter pos no of element to be deleted:");
+ scanf("%d",&n);
+ t=start;
+ if(n!=1)
+ {
+  while(i<n-1)
+  {
+   t=t->link;
+   i++;
+  }
+  t2=t->link;
+  t->link=t2->link;
+  free(t2);
+ }
+ else
+ {
+  start=t->link;
+  free(t);
+ }
+ return start;
+}
+node* sort(node*);
+//to combine 2 ordered lists into a single ordered list
+node* comb(node *s1,node *s2)
+{
+ s1=concat(s1,s2);
+ s1=sort(s1);
+ return s1;
+}
+ 
+node* uni(node *s1,node *s2)//to find the union of 2 lists
+{
+ node *s3,*t,*t2,*t3,*temp;
+ int flag=1;
+ s3=(node*) malloc(sizeof(node));
+ s3=null;
+ t=s1;
+ while(t!=null)
+ {
+  temp=(node*) malloc(sizeof(node));
+  temp->info=t->info;
+  temp->link=null;
+  if(s3==null)
+   s3=temp;
+  else
+  {
+   t2=s3;
+   while(t2->link!=null)
+    t2=t2->link;
+   t2->link=temp;
+  }
+  t=t->link;
+ }
+ 
+ t2=s2;
+ while(t2!=null)
+ {
+  t=s1;
+  flag=1;
+  while(t!=null)
+  {
+   if(t->info==t2->info)
+   {
+    flag=0;
+    break;
+   }
+   t=t->link;
+  }
+  if(flag==1)
+  {
+   for(t3=s3;t3->link!=null;t3=t3->link);
+   temp=(node*) malloc(sizeof(node));
+   temp->info=t2->info;
+   t3->link=temp;
+   temp->link=null;
+  }   
+  t2=t2->link;
+ }
+ return s3;
+}
+
+node* inter(node *s1,node *s2)//to find the intersection of 2 lists
+{
+ node *s3,*t1,*t2,*t3,*temp;
+ s3=(node*) malloc(sizeof(node));
+ s3=null;
+ t1=s1;
+ while(t1!=null)
+ {
+  t2=s2;
+  while(t2!=null)
+  {
+   if(t1->info==t2->info)
+   {
+    temp=(node*) malloc(sizeof(node));
+    temp->info=t1->info;
+    temp->link=null;
+    if(s3==null)
+     s3=temp;
+    else
+    {
+     for(t3=s3;t3->link!=null;t3=t3->link);
+     t3->link=temp;
+    }
+    break;
+   }
+   t2=t2->link;
+  }
+  t1=t1->link;
+ }  
+ return s3;
+} 
+
+node* insertn(node *s)//to insert at nth position
+{
+ node *t,*t2,*temp;
+ int n,i=1;
+ printf("enter data:");
+ temp=(node*) malloc(sizeof(node));
+ scanf("%d",&temp->info);
+ printf("enter position no at which element has to be inserted:");
+ scanf("%d",&n);
+ t=s;
+ if(n!=1)
+ {
+  while(i<n-1)
+  {
+   t=t->link;
+   i++;
+  }
+  t2=t->link;
+  t->link=temp;
+  temp->link=t2;
+ }
+ else
+ {
+  temp->link=s;
+  s=temp;
+ }
+ return s;
+}
+  
+node* del2(node *s)//delete every 2nd element in a list
+{
+ node *t1,*t2;
+ t1=s;
+ while(t1!=null)
+ {
+  t2=t1->link;
+  t1->link=t2->link;
+  free(t2);
+  t1=t1->link;
+ }
+ return s;
+} 
+
+node* sort(node *s)//to place elements in increasing order
+{
+ node *t1,*t2;
+ int temp;
+ for(t1=s;t1->link!=null;t1=t1->link)
+ {
+  for(t2=t1->link;t2!=null;t2=t2->link)
+  {
+   if(t1->info>t2->info)
+   {
+    temp=t1->info;
+    t1->info=t2->info;
+    t2->info=temp;
+   }
+  }
+ }
+ return s;
+}
+
+int sum(node *s)//to find the sum of elements in a list
+{
+ int sum=0;
+ node *t;
+ for(t=s;t!=null;t=t->link)
+  sum+=t->info;
+ return sum;
+}
+
+int elements(node *s)//to find the number of elements in a list
+{
+ int n=0;
+ node *t;
+ for(t=s;t!=null;t=t->link)
+  n++;
+ return n;
+}
+
+node* copy(node *s1)//to make a second copy of the list
+{
+ node *s2,*t,*temp,*t2;
+ s2=null;
+ t=s1;
+ while(t!=null)
+ {
+  temp=(node*) malloc(sizeof(node));
+  temp->info=t->info;
+  temp->link=null;
+  if(s2==null)
+   s2=temp;
+  else
+  {
+   t2=s2;
+   while(t2->link!=null)
+    t2=t2->link;
+   t2->link=temp;
+  }
+  t=t->link;
+ }
+ return s2;
+} 
+   
+node* forward(node *s)//to forward a node by n positions
+{
+ node *t1,*t2,*t3;
+ int n1,n2,i;
+ printf("enter position of the node you want to move:");
+ scanf("%d",&n1);
+ printf("enter no of positions you want to move:");
+ scanf("%d",&n2);
+  t1=s;
+  i=1;
+  while(i<n1)
+  {
+   t1=t1->link;
+   i++;
+  }
+  t2=s;
+  i=1;
+  while(i<n1+n2)
+  {
+   t2=t2->link;
+   i++;
+  }
+  t3=s;
+  if(t1!=s)
+  while(t3->link!=t1)
+   t3=t3->link;
+  t3->link=t1->link;
+  if(t1==s)
+   s=s->link;
+  t1->link=t2->link;
+  t2->link=t1; 
+ return s;
+} 
+
+  
+void main()
+{
+ node *s1,*s2;
+ int ch;
+ s1=null;
+ s2=null;
+ while(1)
+ {
+  clrscr();
+  printf("enter choice:\n");
+  printf(" 1.append element at end\n 2.concatinate two lists\n");
+  printf(" 3.free all nodes in a list\n 4.reverse a list\n");
+  printf(" 5.delete last element\n 6.delete nth element\n");
+  printf(" 7.combine two ordered list into single ordered list\n");
+  printf(" 8.find union of two lists\n 9.find intersection of two lists\n");
+  printf("10.insert after nth element\n11.delete every second element\n");
+  printf("12.place elements in order\n13.return sum of data\n");
+  printf("14.return number of elements\n15.make second copy of list\n");
+  printf("16.move node forward to n positions\n17.exit\n");
+  scanf("%d",&ch);
+  clrscr();
+  if(ch>0&&ch<=16)
+   s1=create(s1);
+   disp(s1);
+  switch(ch)
+  {
+   case 1:s1=append(s1);break;
+   case 2:s2=create(s2);disp(s2);s1=concat(s1,s2);break;
+
+   case 3:s1=fr(s1);
+   printf("list freed\n");
+   disp(s1);
+   break;
+   
+   case 4:s1=rev(s1);break;
+   case 5:s1=dellast(s1);break;
+   case 6:s1=deln(s1);break;
+   case 7:s2=create(s2);disp(s2);s1=comb(s1,s2);break;
+   case 8:s2=create(s2);disp(s2);s1=uni(s1,s2);break;
+   case 9:s2=create(s2);disp(s2);s1=inter(s1,s2);break;
+   case 10:s1=insertn(s1);break;
+   case 11:s1=del2(s1);break;
+   case 12:s1=sort(s1);break;
+   case 13:printf("sum of elements=%d",sum(s1));break;
+   case 14:printf("number of elements=%d",elements(s1));break;
+   
+   case 15:
+   s2=copy(s1);
+   printf("second list:\n");
+   disp(s2);
+   break;
+   
+   case 16:s1=forward(s1);break;
+   case 17:exit(0);break;
+   default:printf("wrong choice.enter again");break;
+  }
+  if(ch!=3&&ch!=13&&ch!=14&&ch!=15&&ch>0&&ch<=16)
+  {
+   printf("\nresult:");
+   disp(s1);
+  }
+   s1=fr(s1);
+   s2=fr(s2);
+   getch();
+ }   
+} 
